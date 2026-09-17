@@ -1,27 +1,37 @@
 #!/bin/bash
 #
 # Ülesanne 4: kontrollib while-tsükliga, kas sisestatud arv on algarv
+# Täiendus: väljastab ka 20 esimese täisarvu kohta, kas see on algarv või mitte
 #
-read -p "Sisesta suvaline arv: " arv
 
+# Funktsioon: kontrollib, kas arv on algarv
+kontrolli_algarv() {
+    local arv=$1
+    if [ $arv -lt 2 ]; then
+        echo "$arv - ei ole algarv"
+        return
+    fi
+    local jagaja=2
+    while [ $(( arv % jagaja )) -ne 0 ]; do
+        jagaja=$(( jagaja + 1 ))
+    done
+    if [ $jagaja -eq $arv ]; then
+        echo "$arv - on algarv"
+    else
+        echo "$arv - ei ole algarv"
+    fi
+}
+
+read -p "Sisesta suvaline arv: " arv
 if ! [[ $arv =~ ^[0-9]+$ ]]; then
     echo "Viga: $arv ei ole positiivne täisarv"
     exit 1
 fi
+kontrolli_algarv $arv
 
-if [ $arv -lt 2 ]; then
-    echo "$arv - ei ole algarv"
-    exit 0
-fi
-
-jagaja=2
-while [ $(( arv % jagaja )) -ne 0 ]; do
-    jagaja=$(( jagaja + 1 ))
+echo
+echo "20 esimest täisarvu:"
+for (( i=1; i<=20; i++ )); do
+    kontrolli_algarv $i
 done
-
-if [ $jagaja -eq $arv ]; then
-    echo "$arv - on algarv"
-else
-    echo "$arv - ei ole algarv"
-fi
 # skripti lõpp
